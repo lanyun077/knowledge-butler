@@ -1,0 +1,4 @@
+interface:
+  display_name: "打开知识管家"
+  short_description: "打开知识管家首页，进入记录、知识、项目、学习与待保存方案"
+  default_prompt: "使用 $knowledge-manager 打开知识管家主页。"

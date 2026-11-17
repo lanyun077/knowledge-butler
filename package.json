@@ -1,0 +1,136 @@
+{
+  "name": "dsh-learning-os",
+  "version": "0.1.0-rc.1",
+  "private": true,
+  "description": "知识管家：基于本地 Markdown / Obsidian 的个人知识、学习与项目管理工具",
+  "type": "module",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./client": "./dist/client.js"
+  },
+  "files": [
+    "dist",
+    "skills",
+    "scripts/prepare-knowledge-demo.mjs",
+    "cordis.patch.yml",
+    "schedule.patch.yml",
+    "README.md",
+    "KNOWLEDGE-GUIDE.md",
+    "compatibility.md",
+    "plugin.json",
+    "scripts/prepare-codex-trial.mjs",
+    "scripts/verify-codex-trial.mjs",
+    "scripts/verify-codex-plugin.mjs",
+    "LICENSE",
+    "THIRD-PARTY.md",
+    "third-party",
+    "INSTALL.md",
+    "CHANGELOG.md",
+    "RELEASE-VALIDATION.md"
+  ],
+  "scripts": {
+    "build": "tsc --noEmit -p tsconfig.host.json && tsc --noEmit -p tsconfig.client.json && tsc --noEmit -p tsconfig.knowledge.json && node build.mjs",
+    "knowledge": "node dist/knowledge-launcher.js",
+    "knowledge:demo": "node scripts/prepare-knowledge-demo.mjs",
+    "test": "vitest run",
+    "prepack": "npm run build",
+    "knowledge:trial": "node scripts/prepare-codex-trial.mjs",
+    "release:package": "node scripts/package-release.mjs"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-connection",
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-client-ui-session",
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-ui-tool"
+      ]
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "4.0.3"
+  },
+  "devDependencies": {
+    "@deepseek-ai/dsh-agent": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-api-session-controller": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-brand": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-client-connection": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-client-store": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-client-ui-chat": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-client-ui-conversation": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-client-ui-layout": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-client-ui-renderer": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-client-ui-session": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-client-ui-settings": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-client-ui-sidebar": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-client-ui-slots": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-client-ui-tool": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-credentials": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-invariants": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-sandbox": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-sandbox-policy": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-schedule": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-scope": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-session": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-system-prompt": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-tools": "0.1.7-alpha.1",
+    "@modelcontextprotocol/ext-apps": "1.7.5",
+    "@types/node": "22.10.0",
+    "@types/react": "18.3.1",
+    "@types/react-dom": "18.3.0",
+    "@types/turndown": "5.0.5",
+    "3d-force-graph": "1.80.2",
+    "esbuild": "0.24.2",
+    "immer": "10.1.1",
+    "jsdom": "25.0.1",
+    "lucide-react": "0.468.0",
+    "markmap-common": "0.18.9",
+    "markmap-view": "0.18.13",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-markdown": "9.0.3",
+    "three": "0.187.0",
+    "typescript": "5.7.3",
+    "vitest": "2.1.9",
+    "zustand": "4.4.7"
+  },
+  "dependencies": {
+    "@deepseek-ai/cordis": "4.0.3",
+    "@deepseek-ai/dsh-http-proxy": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-llm": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-timeout": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-web": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-web-fetch-http": "0.1.7-alpha.1",
+    "@deepseek-ai/schemastery": "3.18.3",
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "@mozilla/readability": "0.6.0",
+    "linkedom": "0.18.12",
+    "pdfjs-dist": "5.4.149",
+    "remark-frontmatter": "5.0.0",
+    "remark-gfm": "4.0.1",
+    "remark-parse": "11.0.0",
+    "turndown": "7.2.0",
+    "unified": "11.0.5",
+    "yaml": "2.8.1",
+    "zod": "4.6.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lanyun077/knowledge-butler.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lanyun077/knowledge-butler/issues"
+  },
+  "engines": {
+    "node": ">=24 <25"
+  }
+}

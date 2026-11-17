@@ -1,0 +1,12 @@
+node_modules/
+dist/
+release/
+coverage/
+*.tgz
+.env
+.env.*
+connection.json
+.mcp.json
+.ai-learning-os/
+AGENTS.md
+CLAUDE.md

@@ -1,0 +1,8 @@
+# Optional official Schedule overlay, loaded before opening the assistant session.
+- insert:
+    - id: time-context
+      name: '@deepseek-ai/dsh-time-context'
+    - id: schedule
+      name: '@deepseek-ai/dsh-schedule'
+- id: ui-schedule
+  disabled: false

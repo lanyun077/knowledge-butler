@@ -1,0 +1,33 @@
+name: 发行检查
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --legacy-peer-deps --ignore-scripts --no-audit --no-fund
+      - run: npm test
+      - run: npm run build
+      - run: npm run release:package
+      - name: 验证实际发行包
+        shell: pwsh
+        run: |
+          $archive = Get-ChildItem release/knowledge-butler-*-windows.zip | Select-Object -First 1
+          Expand-Archive -LiteralPath $archive.FullName -DestinationPath "$env:RUNNER_TEMP/unpacked"
+          $bundle = Get-ChildItem "$env:RUNNER_TEMP/unpacked" -Directory | Select-Object -First 1
+          node "$($bundle.FullName)/scripts/prepare-codex-trial.mjs" "$env:RUNNER_TEMP/knowledge-butler-runtime"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node "$env:RUNNER_TEMP/knowledge-butler-runtime/plugins/learning-os-trial/scripts/verify-codex-trial.mjs" "$env:RUNNER_TEMP/knowledge-butler-runtime/plugins/learning-os-trial" "$env:RUNNER_TEMP/knowledge-butler-runtime/demo"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: knowledge-butler-release
+          path: release/*

@@ -1,0 +1,4 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/client.tsx", "src/assets.d.ts", "tests/workspace.test.ts", "tests/navigation.test.ts", "tests/client-config.test.ts", "tests/host-rendering.test.ts", "tests/business-panel.test.ts", "tests/references.test.ts", "tests/note-tool-view.test.ts", "tests/daily-tool-view.test.ts", "tests/daily-management.test.ts"]
+}

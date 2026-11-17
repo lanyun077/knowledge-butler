@@ -1,0 +1,4 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/index.ts", "tests/task-progress.test.ts", "tests/vault.test.ts", "tests/article-source.test.ts", "tests/pdf-source.test.ts", "tests/host-business.test.ts", "tests/assistant-tools.test.ts", "tests/period-review.test.ts", "tests/due-reviews.test.ts", "tests/routines.test.ts"]
+}

@@ -1,0 +1,4 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/knowledge-*.ts", "src/manager/*.tsx", "src/assets.d.ts", "tests/knowledge-manager*.ts", "tests/knowledge-service.test.ts", "tests/knowledge-handoff.test.ts", "tests/knowledge-correction.test.ts", "tests/knowledge-reuse.test.ts", "tests/knowledge-management.test.ts", "tests/knowledge-business.test.ts", "tests/knowledge-routines.test.ts", "tests/knowledge-organization.test.ts", "tests/knowledge-synthesis.test.ts", "tests/knowledge-saving.test.ts"]
+}
