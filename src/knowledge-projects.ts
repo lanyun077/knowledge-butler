@@ -8,7 +8,7 @@ export const projectBindingSchema = z.object({
   projectPath: z.string().min(1),
   sourceRoot: z.string().refine(isAbsolute, "Source root must be absolute").optional(),
 }).strict();
-export type ProjectBinding = z.infer<typeof projectBindingSchema>;
+export type ProjectBinding = z.infer<typeof projectBindingSchema> & { configuredDirectory?: string };
 export interface ProjectContext { bound: boolean; directory?: string; projectPath?: string; fileSubmission: boolean }
 const canonical = (path: string) => process.platform === "win32" ? resolve(path).toLowerCase() : resolve(path);
 
@@ -22,7 +22,8 @@ export async function normalizeProjects(projects: ProjectBinding[]): Promise<Pro
     seen.add(canonical(directory));
     const sourceRoot = project.sourceRoot ? await realpath(project.sourceRoot) : undefined;
     if (sourceRoot && !(await lstat(sourceRoot)).isDirectory()) throw new Error("Project source root is not a directory");
-    normalized.push({ directory, projectPath: project.projectPath, ...(sourceRoot ? { sourceRoot } : {}) });
+    normalized.push({ directory, projectPath: project.projectPath, ...(sourceRoot ? { sourceRoot } : {}),
+      ...(canonical(project.directory) !== canonical(directory) ? { configuredDirectory: resolve(project.directory) } : {}) });
   }
   return normalized.sort((a, b) => canonical(a.directory).localeCompare(canonical(b.directory)));
 }
@@ -30,7 +31,8 @@ export async function normalizeProjects(projects: ProjectBinding[]): Promise<Pro
 export const projectsFingerprint = (projects: ProjectBinding[]) => createHash("sha256").update(JSON.stringify(projects)).digest("hex");
 export function projectBinding(projects: ProjectBinding[], directory?: string): ProjectBinding | undefined {
   // A model-supplied directory is only a lookup hint; never resolve/read it on disk.
-  return directory && isAbsolute(directory) ? projects.find(item => canonical(item.directory) === canonical(directory)) : undefined;
+  return directory && isAbsolute(directory) ? projects.find(item => canonical(item.directory) === canonical(directory)
+    || item.configuredDirectory && canonical(item.configuredDirectory) === canonical(directory)) : undefined;
 }
 export function projectContext(projects: ProjectBinding[], directory?: string): ProjectContext {
   const project = projectBinding(projects, directory);

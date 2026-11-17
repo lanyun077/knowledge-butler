@@ -34,7 +34,7 @@
     "build": "tsc --noEmit -p tsconfig.host.json && tsc --noEmit -p tsconfig.client.json && tsc --noEmit -p tsconfig.knowledge.json && node build.mjs",
     "knowledge": "node dist/knowledge-launcher.js",
     "knowledge:demo": "node scripts/prepare-knowledge-demo.mjs",
-    "test": "vitest run",
+    "test": "vitest run --no-file-parallelism",
     "prepack": "npm run build",
     "knowledge:trial": "node scripts/prepare-codex-trial.mjs",
     "release:package": "node scripts/package-release.mjs"

@@ -21,6 +21,7 @@ export async function loadKnowledgeConfig(path: string): Promise<KnowledgeConfig
   const vaultId = createHash("sha256").update(canonical).digest("hex");
   // Binding this stable loopback port is the OS-level exclusive ownership operation.
   // A hash collision fails closed at the authenticated vaultId handshake.
-  const port = 20000 + (parseInt(vaultId.slice(0, 8), 16) % 30000);
+  // Stay below Windows' default dynamic range (49152+), which may be reserved.
+  const port = 20000 + (parseInt(vaultId.slice(0, 8), 16) % 28000);
   return { ...value, projects: await normalizeProjects(value.projects), vaultRoot, vaultId, port, url: `http://127.0.0.1:${port}` };
 }
