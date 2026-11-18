@@ -36,12 +36,12 @@ codex plugin add learning-os-trial@learning-os-trial
 
 将项目、学习和零散材料整理为知识。在三维星空中搜索主题、逐层浏览，用全视图查看知识之间的关联。
 
-![知识星空全视图：32 个主题、1,184 个节点及其关联](docs/images/knowledge-sky.png)
+![知识星空常态：左侧搜索与主题目录，远景只保留恒星](docs/images/knowledge-sky-overview.png)
 
 <details>
-<summary>查看常态：聚焦主题，按需展开</summary>
+<summary>查看全视图：完整观察知识间联系</summary>
 
-![知识星空常态：左侧搜索与主题目录，远景只保留恒星](docs/images/knowledge-sky-overview.png)
+![知识星空全视图：32 个主题、1,184 个节点及其关联](docs/images/knowledge-sky.png)
 
 </details>
 
