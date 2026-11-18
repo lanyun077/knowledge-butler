@@ -2,7 +2,32 @@
 
 在 Codex 中整理资料，在 Obsidian 中积累知识。
 
-[下载](https://github.com/lanyun077/knowledge-butler/releases) · [安装](INSTALL.md) · [简明使用指南](docs/GETTING-STARTED.md)
+**[下载 Windows 安装包](https://github.com/lanyun077/knowledge-butler/releases/download/v0.1.0-rc.1/knowledge-butler-0.1.0-rc.1-windows.zip)** · [所有版本](https://github.com/lanyun077/knowledge-butler/releases) · [简明使用指南](docs/GETTING-STARTED.md)
+
+## 下载安装
+
+环境：Windows、[Node.js 24 LTS](https://nodejs.org/)、Codex 和 Obsidian。无需安装 Obsidian 社区插件。
+
+**1. 下载并解压**上方 Windows 安装包，在解压目录打开 PowerShell。
+
+**2. 准备运行目录**，复制执行：
+
+```powershell
+$runtime = "$env:LOCALAPPDATA\KnowledgeButler\rc1"
+New-Item -ItemType Directory -Force "$env:LOCALAPPDATA\KnowledgeButler" | Out-Null
+node scripts/prepare-codex-trial.mjs "$runtime"
+```
+
+**3. 准备成功后，在同一窗口安装插件**：
+
+```powershell
+codex plugin marketplace add "$runtime"
+codex plugin add learning-os-trial@learning-os-trial
+```
+
+重启 Codex，在新聊天中说 **“打开知识管家”**。
+
+[接入自己的知识库](INSTALL.md#连接已有vault) · [完整安装与验证](INSTALL.md) · [升级与恢复](KNOWLEDGE-GUIDE.md#升级与回退)
 
 ## 看见知识之间的关联
 
@@ -39,14 +64,6 @@
 ## 保存有出处，原文随时读
 
 用自然语言发起收集和整理，查看保存位置与出处，在 Obsidian 打开完整笔记。资料以本地 Markdown 保存。
-
-## 开始使用
-
-环境：Windows、Node.js 24 LTS、Codex 和 Obsidian。无需安装 Obsidian 社区插件。
-
-下载 Windows ZIP，按[安装说明](INSTALL.md)接入知识库，在 Codex 中说“打开知识管家”。
-
-[发行说明](CHANGELOG.md) · [升级与恢复](KNOWLEDGE-GUIDE.md#升级与回退)
 
 ## 许可与反馈
 
