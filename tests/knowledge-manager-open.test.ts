@@ -1,4 +1,4 @@
-import { mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
+import { mkdtemp, mkdir, writeFile, rm, realpath } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
@@ -21,7 +21,7 @@ it("opens only a real mapped note through the app tool, constructs its URI on th
     expect((await client.listTools()).tools.find(tool => tool.name === "learning_manager_open_note")?._meta).toEqual({ ui: { visibility: ["app"] } });
     const call = (args: Record<string, unknown>) => client.callTool({ name: "learning_manager_open_note", arguments: args });
     expect((await call({ path })).structuredContent).toEqual({ status: "requested", path });
-    expect(openNoteUri).toHaveBeenCalledWith("obsidian://open?path=" + encodeURIComponent(join(root, path)));
+    expect(openNoteUri).toHaveBeenCalledWith("obsidian://open?path=" + encodeURIComponent(await realpath(join(root, path))));
     for (const args of [{ path: "../outside.md" }, { path: "Wiki/missing.md" }, { path, url: "https://untrusted.example" }]) {
       expect((await call(args)).isError).toBe(true);
     }
