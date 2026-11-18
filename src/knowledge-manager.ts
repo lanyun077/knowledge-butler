@@ -3,9 +3,21 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { KnowledgeCore } from "./knowledge-core";
 import { planSummary } from "./knowledge-management";
 import { managerInput, managerSnapshot, managerUri, managerMime } from "./knowledge-manager-contract";
+import { z } from "zod";
+import { openNoteUri } from "./knowledge-note-open";
 
 /** Paginated, version-bound reads for the manager UI. */
 export function registerKnowledgeManager(server: McpServer, core: KnowledgeCore) {
+  server.registerTool("learning_manager_open_note", {
+    title: "在 Obsidian 打开笔记", description: "Open an existing mapped note in local Obsidian at the user's click. Does not modify note content.",
+    inputSchema: z.object({ path: z.string().min(1).max(4096) }).strict(),
+    annotations: { destructiveHint: false, openWorldHint: false }, _meta: { ui: { visibility: ["app"] } },
+  }, async ({ path }, extra) => {
+    const note = await core.noteSummary(path, extra.signal);
+    extra.signal.throwIfAborted();
+    await openNoteUri(core.noteOpenUri(note.path));
+    return { content: [{ type: "text" as const, text: "已请求在 Obsidian 打开。" }], structuredContent: { status: "requested", path: note.path } };
+  });
   const read = async (input: ReturnType<typeof managerInput.parse>, signal: AbortSignal) => {
     const { view, query, offset, path, version, historyOffset } = input;
     let data;

@@ -1,5 +1,5 @@
 import ForceGraph3D from '3d-force-graph';
-import { Group, Mesh, SphereGeometry, MeshLambertMaterial, MOUSE, TOUCH, Vector3 } from 'three';
+import { Group, Mesh, SphereGeometry, MeshLambertMaterial, MOUSE, TOUCH, Vector2, Vector3, Raycaster } from 'three';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { layoutGraph, makeView, presentView, collapseOverview } from './layout.js';
 function start(sample, initialPath) {
@@ -131,7 +131,6 @@ function syncLabel(object) {
   if (object.label) return;
   const element = document.createElement('button');
   element.className = `node-label ${node.kind}${node.external ? ' external' : ''}`;
-  if (node.kind === 'note') element.style.pointerEvents = 'none';
   const title = node.kind === 'note' ? node.title.split(' · ').at(-1) : node.title;
   element.textContent = node.external ? `${title} ↗` : title;
   element.setAttribute('aria-label', node.title);
@@ -208,6 +207,7 @@ function inspect(id) {
   $('detail-path').textContent = node.path; $('detail-degree').textContent = `${node.degree} 条直接关联`;
   $('open-note').hidden = !node.uri;
   if (node.uri) $('open-note').href = '#';
+  $('open-status').textContent = '';
   $('detail-focus').textContent = isExternal ? '进入所属星系' : '定位此处';
   $('related').replaceChildren();
   for (const relatedId of adjacent.get(id)) {
@@ -239,11 +239,11 @@ function syncCameraView(mode) {
 }
 function navigate(id) {
   const node = byId.get(id), owner = `g${node.group}`;
-  if (node.kind === 'domain' && domainId === owner && !selected && !expandedIds.length) return;
-  if (node.id === selected) { focus(id); return; }
+  if (node.kind === 'domain' && domainId === owner) { inspect(id); return; }
+  if (node.id === selected) { inspect(id); focus(id); return; }
   history.push({ domainId, selected, expandedIds: [...expandedIds], fullView,
     camera: cameraSnapshot() });
-  if (node.kind === 'domain') setView(owner);
+  if (node.kind === 'domain') setView(owner, { selectedId: topicsByGroup.get(node.group)?.length ? undefined : id });
   else {
     // 画布与详情中的外部节点在原星系向外展开，搜索另行进入所属领域。
     setView(domainId ?? owner, { selectedId: id, expansions: [...new Set([...expandedIds, id])] });
@@ -363,13 +363,34 @@ function mount() {
       });
     })
     .linkColor(edgeColor).linkOpacity(1).linkWidth(0)
-    .onNodeClick(node => navigate(node.id))
     .onNodeHover(node => {
       root.style.cursor = node ? 'pointer' : 'grab';
       if (!node && root.querySelector('.node-label:hover, .node-label:focus-visible')) return;
       hoverNode(node?.id);
-    }).onBackgroundClick(closeDetail);
+    });
   graph.renderer().setPixelRatio(Math.min(devicePixelRatio, 2));
+  // 按点击位置直接命中球体，不依赖库在上一渲染帧缓存的悬停对象。
+  const canvas = graph.renderer().domElement, raycaster = new Raycaster();
+  let press;
+  canvas.addEventListener('pointerdown', event => {
+    press = event.button === 0 ? { x: event.clientX, y: event.clientY, dragged: false } : undefined;
+  });
+  canvas.addEventListener('pointermove', event => {
+    if (press && Math.hypot(event.clientX - press.x, event.clientY - press.y) > 6) press.dragged = true;
+  });
+  canvas.addEventListener('pointercancel', () => { press = undefined; });
+  canvas.addEventListener('pointerup', event => {
+    const previous = press; press = undefined;
+    if (!previous || previous.dragged || event.button !== 0 || Math.hypot(event.clientX - previous.x, event.clientY - previous.y) > 6) return;
+    const bounds = canvas.getBoundingClientRect();
+    graph.camera().updateMatrixWorld();
+    raycaster.setFromCamera(new Vector2((event.clientX - bounds.left) / bounds.width * 2 - 1, 1 - (event.clientY - bounds.top) / bounds.height * 2), graph.camera());
+    const visible = [...objects.values()].filter(object => presentation.nodes.has(object.node.id));
+    visible.forEach(object => object.sphere.updateWorldMatrix(true, false));
+    const hit = raycaster.intersectObjects(visible.map(object => object.sphere), false)[0];
+    const node = hit && visible.find(object => object.sphere === hit.object)?.node;
+    if (node) navigate(node.id); else closeDetail();
+  }, { capture: true });
   const controls = graph.controls();
   controls.mouseButtons = { LEFT: MOUSE.PAN, MIDDLE: MOUSE.ROTATE, RIGHT: MOUSE.PAN };
   controls.touches = { ONE: TOUCH.ROTATE, TWO: TOUCH.DOLLY_PAN };
@@ -442,6 +463,7 @@ $('theme').addEventListener('click', () => applyTheme(document.documentElement.d
 const receive = event => {
   if (event.source !== parent) return;
   if (event.data?.type === 'knowledge-star-theme' && ['light', 'dark'].includes(event.data.theme)) applyTheme(event.data.theme);
+  if (event.data?.type === 'knowledge-star-open-result' && event.data.id === selected) $('open-status').textContent = event.data.message;
   if (event.data?.type === 'knowledge-star-focus-last') {
     const controls = [...document.querySelectorAll('button:not(:disabled), input, a[href]')].filter(element => element.getClientRects().length);
     controls.at(-1)?.focus();
@@ -465,7 +487,10 @@ document.addEventListener('keydown', event => {
   if (event.key === 'Enter' && document.activeElement === $('search')) $('results').querySelector('button')?.click();
 });
 document.addEventListener('click', event => { if (!event.target.closest('.search')) hideSearch(); });
-$('open-note').addEventListener('click', event => { event.preventDefault(); parent.postMessage({ type: 'knowledge-star-open', id: selected }, '*'); });
+$('open-note').addEventListener('click', event => {
+  event.preventDefault(); $('open-status').textContent = '正在请求打开…';
+  parent.postMessage({ type: 'knowledge-star-open', id: selected }, '*');
+});
 if (!sample.nodes.length) { $('notice').hidden = false; $('notice').textContent = '还没有知识主题，可先整理一份材料。'; return; }
 try { mount(); const initial = sample.nodes.find(node => node.kind === 'domain' && node.path === initialPath); if (initial) navigate(initial.id); } catch (error) {
   graph = undefined; setView(undefined);

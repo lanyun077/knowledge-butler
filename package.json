@@ -1,6 +1,6 @@
 {
   "name": "dsh-learning-os",
-  "version": "0.1.0-rc.1",
+  "version": "0.1.0-rc.2",
   "private": true,
   "description": "知识管家：基于本地 Markdown / Obsidian 的个人知识、学习与项目管理工具",
   "type": "module",
@@ -18,6 +18,8 @@
     "schedule.patch.yml",
     "README.md",
     "KNOWLEDGE-GUIDE.md",
+    "docs/GETTING-STARTED.md",
+    "docs/images",
     "compatibility.md",
     "plugin.json",
     "scripts/prepare-codex-trial.mjs",
@@ -37,6 +39,7 @@
     "test": "vitest run --no-file-parallelism",
     "prepack": "npm run build",
     "knowledge:trial": "node scripts/prepare-codex-trial.mjs",
+    "knowledge:setup": "node dist/knowledge-setup.js",
     "release:package": "node scripts/package-release.mjs"
   },
   "dsh": {
@@ -84,6 +87,7 @@
     "@deepseek-ai/dsh-system-prompt": "0.1.7-alpha.1",
     "@deepseek-ai/dsh-tools": "0.1.7-alpha.1",
     "@modelcontextprotocol/ext-apps": "1.7.5",
+    "@types/jsdom": "21.1.7",
     "@types/node": "22.10.0",
     "@types/react": "18.3.1",
     "@types/react-dom": "18.3.0",

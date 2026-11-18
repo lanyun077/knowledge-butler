@@ -39,7 +39,7 @@ try {
   };
   assert.deepEqual(await call(clients[0], "learning_status"), await call(clients[1], "learning_status"));
   const uiTool = (await clients[0].listTools()).tools.find(tool => tool.name === "learning_open_manager");
-  assert.equal(uiTool?._meta?.ui?.resourceUri, "ui://learning-os/manager-u2-v4.html");
+  assert.equal(uiTool?._meta?.ui?.resourceUri, "ui://learning-os/manager-u2-v4-interaction-3.html");
   const ui = await clients[0].readResource({ uri: uiTool._meta.ui.resourceUri });
   assert.equal(ui.contents[0].mimeType, "text/html;profile=mcp-app");
   assert.ok(ui.contents[0].text.includes("<script>"));

@@ -11,6 +11,7 @@ import { OrganizeKnowledge } from "./organize";
 import { ChangePreview } from "./changes";
 import { Disclosure } from "./disclosure";
 import { StarMap } from "./star-map";
+import { openManagerNote } from "./open-note";
 import { writeReview } from "../knowledge-write-policy";
 import { managerSnapshot, managerViews, managerPlan, managerRestore, managerOperationResult, managerPinResult,
   type ManagerInput, type ManagerSnapshot, type ManagerPlan, type ManagerRestore } from "../knowledge-manager-contract";
@@ -296,7 +297,7 @@ export function Manager({ app }: { app: App }) {
             {detail.reuse.metadataError && <p className="error">{detail.reuse.metadataError}</p>}
             {request.view === "detail" ? <><Body content={detail.content} />{pager(detail.offset, detail.total, detail.nextOffset, 8000, offset => void read({ ...request, offset, version: detail.version }), "正文")}</>
               : <><p className="excerpt">{detail.summary || "暂无概况，请打开原文阅读。"}</p>{detail.openUri && <button onClick={async () => {
-                try { const result = await app.openLink({ url: detail.openUri! }); setMessage(result.isError ? "暂时无法打开，请复制文章路径在 Obsidian 查找。" : ""); }
+                try { await openManagerNote(app, detail.path); setMessage("已请求在 Obsidian 打开。"); }
                 catch { setMessage("暂时无法打开，请复制文章路径在 Obsidian 查找。"); }
               }}>在 Obsidian 打开</button>}</>}
           </section>

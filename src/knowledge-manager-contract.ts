@@ -3,7 +3,7 @@ import { knowledgePlanMetadata } from "./knowledge-synthesis-contract";
 import { knowledgeTopicPage } from "./knowledge-organization-contract";
 import { starPage } from "./knowledge-stars";
 
-export const managerUri = "ui://learning-os/manager-u2-v4.html";
+export const managerUri = "ui://learning-os/manager-u2-v4-interaction-3.html";
 export const managerMime = "text/html;profile=mcp-app";
 export const managerViews = ["home", "plans", "sources", "knowledge", "projects", "learning", "activity", "records", "settings"] as const;
 export const managerInput = z.object({

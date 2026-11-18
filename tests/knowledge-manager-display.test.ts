@@ -32,20 +32,21 @@ it("keeps long before/after text out of the DOM until explicitly expanded", asyn
   expect(container.textContent!.length).toBeLessThan(1200);
 });
 
-it("pins graph pages and opens only a node from its own frame using the server URI", async () => {
-  const app = { callServerTool: vi.fn(async ({ arguments: input }) => page(input.offset)), openLink: vi.fn(async () => ({ isError: true })) };
+it("pins graph pages and opens only a trusted node path from its own frame through the local service", async () => {
+  const app = { callServerTool: vi.fn(async ({ name, arguments: input }) => name === "learning_manager_open_note" ? { content: [], isError: true } : page(input.offset)) };
   await act(async () => root.render(createElement(StarMap, { app: app as unknown as App, theme: "light" })));
   expect(app.callServerTool.mock.calls[1][0].arguments).toEqual({ view: "universe", offset: 500, version });
   const frame = container.querySelector("iframe")!;
+  const reply = vi.spyOn(frame.contentWindow!, "postMessage");
   const send = async (source: MessageEventSource | null, id = "g0") => act(async () => { window.dispatchEvent(new MessageEvent("message", { source, data: { type: "knowledge-star-open", id, uri: "https://untrusted.example" } })); });
   await send(window); await send(frame.contentWindow, "unknown");
-  expect(app.openLink).not.toHaveBeenCalled();
+  expect(app.callServerTool).toHaveBeenCalledTimes(2);
   await send(frame.contentWindow);
-  expect(app.openLink).toHaveBeenCalledTimes(1); expect(app.openLink).toHaveBeenCalledWith({ url: node.uri });
-  expect(container.textContent).toContain("暂时无法打开文章");
+  expect(app.callServerTool).toHaveBeenCalledTimes(3); expect(app.callServerTool).toHaveBeenLastCalledWith({ name: "learning_manager_open_note", arguments: { path: node.path } });
+  expect(reply).toHaveBeenLastCalledWith({ type: "knowledge-star-open-result", id: node.id, message: expect.stringContaining("暂时无法打开文章") }, "*");
   await act(async () => root.render(createElement(StarMap, { app: app as unknown as App, theme: "light", focusPath: node.path })));
   expect(container.querySelector("iframe")).not.toBe(frame);
-  expect(app.callServerTool).toHaveBeenCalledTimes(2);
+  expect(app.callServerTool).toHaveBeenCalledTimes(3);
 });
 
 it("does not mount a mixed graph when a later page has another version", async () => {

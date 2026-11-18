@@ -74,11 +74,11 @@ describe("knowledge workspace", () => {
   });
 
   it("reports an open request rather than claiming Obsidian launched and keeps an empty topic usable", async () => {
-    const app = { openLink: vi.fn(async () => ({})) } as unknown as App;
+    const app = { callServerTool: vi.fn(async () => ({ content: [] })) } as unknown as App;
     const empty = { ...topic, organized: { ...topic.organized, items: page([]), relations: page([]) } };
     await act(async () => root.render(createElement(KnowledgeWorkspace, { topic: empty, app, theme: "light", disabled: false, offset: 0, onPage: vi.fn(), organize: vi.fn() })));
     await click("Markdown"); expect(container.textContent).toContain("暂无可展示条目");
-    await click("在 Obsidian 打开"); expect(app.openLink).toHaveBeenCalledWith({ url: topic.openUri }); expect(container.textContent).toContain("已请求在 Obsidian 打开");
+    await click("在 Obsidian 打开"); expect(app.callServerTool).toHaveBeenCalledWith({ name: "learning_manager_open_note", arguments: { path: topic.path } }); expect(container.textContent).toContain("已请求在 Obsidian 打开");
     await click("Markdown"); expect(container.textContent).toContain("完整正文");
   });
 

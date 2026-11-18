@@ -6,7 +6,7 @@ const stars = await build({ entryPoints: ["src/manager/stars/viewer.js"], bundle
   platform: "browser", format: "iife", target: "es2022", legalComments: "inline" });
 const starHtml = (await readFile("src/manager/stars/shell.html", "utf8")).replace("/* APP */", () => stars.outputFiles[0].text.replace(/<\/script/gi, "<\\/script"));
 const bundle = await build({ entryPoints: ["src/manager/app.tsx"], bundle: true, write: false,
-  platform: "browser", format: "iife", target: "es2022", minify: true, metafile: true,
+  platform: "browser", format: "iife", target: "es2022", jsx: "automatic", minify: true, metafile: true,
   define: { "process.env.NODE_ENV": '"production"', __STAR_MAP_HTML__: JSON.stringify(starHtml) }, loader: { ".css": "text" } });
 const script = bundle.outputFiles[0].text.replace(/<\/script/gi, "<\\/script");
 await mkdir("dist", { recursive: true });

@@ -5,17 +5,17 @@ import { z } from "zod";
 import { defaultFolderMap } from "./vault";
 import { normalizeProjects, projectBindingSchema } from "./knowledge-projects";
 
-const schema = z.object({
+export const knowledgeConfigSchema = z.object({
   schemaVersion: z.literal(1),
   vaultRoot: z.string().refine(isAbsolute, "Vault root must be absolute"),
   token: z.string().regex(/^[a-f0-9]{64}$/),
   folders: z.object({ inbox: z.string(), knowledge: z.string(), daily: z.string(), projects: z.string(), learning: z.string() }).strict().default(defaultFolderMap),
   projects: z.array(projectBindingSchema).default([]),
 }).strict();
-export type KnowledgeConfig = z.infer<typeof schema> & { vaultId: string; port: number; url: string };
+export type KnowledgeConfig = z.infer<typeof knowledgeConfigSchema> & { vaultId: string; port: number; url: string };
 
 export async function loadKnowledgeConfig(path: string): Promise<KnowledgeConfig> {
-  const value = schema.parse(JSON.parse(await readFile(path, "utf8")));
+  const value = knowledgeConfigSchema.parse(JSON.parse(await readFile(path, "utf8")));
   const vaultRoot = await realpath(value.vaultRoot);
   const canonical = process.platform === "win32" ? vaultRoot.toLowerCase() : vaultRoot;
   const vaultId = createHash("sha256").update(canonical).digest("hex");

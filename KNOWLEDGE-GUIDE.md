@@ -1,6 +1,8 @@
 # 知识整理使用与升级说明
 
-更新：2026-11-17；适用版本：0.1.0-rc.1。安装准备不等于注册或升级；发行范围及实际环境待验项见[发行说明](CHANGELOG.md)和[兼容范围](compatibility.md)。
+新用户先看 [图文入门指南](docs/GETTING-STARTED.md)；本文补充整理机制、授权与升级恢复细节。
+
+更新：2026-11-19；适用版本：0.1.0-rc.2。安装准备不等于注册或升级；发行范围及实际环境待验项见[发行说明](CHANGELOG.md)和[兼容范围](compatibility.md)。
 
 ## 使用流程
 
@@ -29,7 +31,7 @@
 ```powershell
 npm test
 npm run build
-node scripts/prepare-codex-trial.mjs 'D:\自选测试目录\knowledge-rc1'
+node scripts/prepare-codex-trial.mjs 'D:\自选测试目录\knowledge-rc2'
 ```
 
 按生成的 `TRIAL.md` 执行副本验证命令即可。准备脚本只安装副本生产依赖并生成合成库，不注册市场，不修改实际 Codex 配置或现有知识库。验证脚本会写入该合成库并重启／停止它的独立服务，请勿传入个人库配置，也不要与正在使用该合成库的会话同时运行。
@@ -48,7 +50,7 @@ node scripts/prepare-codex-trial.mjs 'D:\自选测试目录\knowledge-rc1'
 
 1. 关闭使用旧服务的页面和聊天工具连接，用**旧运行目录**的 launcher 执行 `stop --config '原连接配置绝对路径'`。
 2. 将已验证的新运行文件、技能模板、依赖、许可声明及兼容 manifest 放到固定运行目录；保留原 Vault 和原连接配置，不用新生成的 demo 覆盖它们。核对兼容 manifest 的版本及 `.mcp.json` 的 Node、launcher、`--config` 都指向计划使用的位置。兼容布局只保留 `.codex-plugin/plugin.json`，不同时放 root `plugin.json`。
-3. 用现有本地市场刷新插件安装并重启 Codex；不要因准备了新目录而覆盖原市场注册。新聊天核对 `learning_status` 的 vaultId、目录映射和 32 工具，读取一篇旧笔记，打开管家，再用明确选定的小样本验证选择→整理→保存→三视图→Obsidian。不要重放旧确认，待保存方案重新预览。
+3. 在原运行目录替换完成后，执行 `codex plugin add learning-os-trial@learning-os-trial` 刷新安装，再重启 Codex；不要因准备了新目录而覆盖原市场注册。新聊天核对 `learning_status` 的 vaultId、目录映射和工具发现，读取一篇旧笔记，打开管家，再用明确选定的小样本验证选择→整理→保存→三视图→Obsidian。不要重放旧确认，待保存方案重新预览。旧聊天的工具连接可能仍使用旧版服务地址，刷新页面无法替代重启宿主。
 4. 如需恢复一次内容修改，优先使用记录的预览恢复；它会检查当前版本。新建笔记没有旧正文，不能假称有可恢复的历史内容。
 
 K2–K5 没有破坏性数据迁移，普通 Markdown 始终可读，内存索引可重建。但 alpha.47 等早期 writer 不理解多来源方案：**不能仅替换成早期程序后继续保存新格式方案**。回退前用新版列出并明确取消所有未完成的新格式方案，核对没有活动写入后停止服务。完整保留回退前的 Vault 快照；若回到不懂新格式的版本，使用升级前配套的运行目录和 Vault 备份，升级后新增文件另存，不盲目覆盖合并。仅撤回 K5 展示也应使用保留 K4 多来源校验的版本。

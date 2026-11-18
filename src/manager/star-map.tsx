@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { managerSnapshot } from "../knowledge-manager-contract";
 import type { StarData } from "../knowledge-stars";
 import { Maximize2, Minimize2 } from "lucide-react";
+import { openManagerNote } from "./open-note";
 
 declare const __STAR_MAP_HTML__: string;
 
@@ -54,8 +55,13 @@ export function StarMap({ app, theme, focusPath }: { app: App; theme: string; fo
       if (event.data?.type === "knowledge-star-escape") { setFullscreen(false); fullscreenButton.current?.focus(); }
       if (event.data?.type === "knowledge-star-open") {
         const node = data?.nodes.find(node => node.id === event.data.id);
-        if (node) void app.openLink({ url: node.uri }).then(result => setNotice(result.isError ? "暂时无法打开文章，请复制预览中的路径在 Obsidian 查找。" : ""))
-          .catch(() => setNotice("暂时无法打开文章，请复制预览中的路径在 Obsidian 查找。"));
+        if (node) {
+          const reply = (failed: boolean) => {
+            const message = failed ? "暂时无法打开文章。请先在 Obsidian 打开此知识库，再重试。" : "已请求 Obsidian 打开；若未显示，请先在 Obsidian 打开此知识库。";
+            frame.current?.contentWindow?.postMessage({ type: "knowledge-star-open-result", id: node.id, message }, "*");
+          };
+          void openManagerNote(app, node.path).then(() => reply(false)).catch(() => reply(true));
+        }
       }
     };
     window.addEventListener("message", message); return () => window.removeEventListener("message", message);

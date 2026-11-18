@@ -1,14 +1,14 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "learning-os-trial",
-  "version": "0.1.0-rc.1",
-  "description": "知识管家候选发行版：本地材料整理、知识星空、项目与学习管理。",
+  "version": "0.1.0-rc.2",
+  "description": "知识管家：本地材料整理、知识星空、项目与学习管理。",
   "extensions": {
     "com.openai": {
       "requires_local_executor": true,
       "interface": {
-        "displayName": "知识管家（候选版）",
-        "shortDescription": "在本地试用库中整理知识、保存总结与查看记录",
+        "displayName": "知识管家",
+        "shortDescription": "在 Codex 中整理资料，在 Obsidian 中积累知识",
         "category": "Productivity",
         "capabilities": [
           "Read",

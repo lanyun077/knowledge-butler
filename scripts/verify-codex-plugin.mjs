@@ -48,7 +48,7 @@ try {
   const server = servers.find(item => item.pluginId === plugin.summary.id && item.name === "knowledge");
   assert.ok(server, "Codex did not load the plugin's knowledge MCP server");
   assert.equal(server.toolsError, null, "Codex tool discovery failed");
-  for (const name of ["learning_status", "learning_manage", "learning_open_manager", "learning_manager_probe", "learning_read", "learning_plan_business", "learning_request_confirmation", "learning_knowledge_collect", "learning_knowledge_query", "learning_plan_knowledge"]) {
+  for (const name of ["learning_status", "learning_manage", "learning_open_manager", "learning_manager_probe", "learning_manager_open_note", "learning_read", "learning_plan_business", "learning_request_confirmation", "learning_knowledge_collect", "learning_knowledge_query", "learning_plan_knowledge"]) {
     assert.ok(Object.hasOwn(server.tools, name), `Codex did not load ${name}`);
   }
   process.stdout.write(JSON.stringify({ status: "passed", pluginId: plugin.summary.id, version: plugin.summary.localVersion,

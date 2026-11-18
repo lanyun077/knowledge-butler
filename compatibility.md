@@ -1,12 +1,12 @@
-# v0.1.0-rc.1 兼容范围
+# v0.1.0-rc.2 兼容范围
 
 | 组件 | 当前范围与证据 |
 | --- | --- |
 | 操作系统 | Codex准备脚本只支持Windows；本机已完成生产依赖安装与隔离工具链测试。macOS/Linux不在此发行承诺中 |
 | Node.js | 24 LTS；安装脚本检查主版本24，实际验证采用24.21.0 |
-| Codex | 本地插件兼容格式最初在0.163发现验证通过；本候选版在0.169.0-alpha.11.1独立配置中发现32工具和3技能。保留 `.codex-plugin/plugin.json`、`.mcp.json`，完整页面交互另计 |
+| Codex | 使用 `.codex-plugin/plugin.json`、`.mcp.json` 插件格式；本机 0.169.0-alpha.11.1 独立配置中发现 33 工具和 3 技能。页面支持 MCP Apps |
 | MCP Apps | 正式自包含HTML＋官方AppBridge合成宿主已验证，包含519节点图、宽窄屏、主题与全屏交互；当前Codex真实CSP、消息交接和完整页面流程尚未全部验收 |
-| Obsidian | 原文链接采用本机 `obsidian://open`。中文／空格URI编码与请求已验证，实际应用启动尚待验；可直接在Obsidian打开对应Vault |
+| Obsidian | 原文入口由本地服务启动 `obsidian://open`，支持中文及空格路径；已验证原生应用打开笔记。知识库需先在 Obsidian 登记 |
 | Obsidian Local REST API | 可选元数据桥接基线5.4.0，只接受本机HTTP地址；不可用时使用本地Markdown显式链接。Codex全库星图目前不额外拉取该元数据 |
 | DSH Web | 固定开发契约0.1.7-alpha.1 / Cordis4.0.3；此前隔离业务接口与基础UI有证据。此次未完成当前DSH页面及真实模型全流程验收 |
 | DSH Desktop / EAC | 未验收，不宣称兼容 |
@@ -20,4 +20,4 @@
 
 ## 升级兼容
 
-保留旧插件标识 `learning-os-trial` 和现有UI资源URI。此版没有破坏性Markdown迁移，但alpha.47等早期writer不理解多来源方案；回退需先用新版取消未完成的新格式方案，停止服务并保留整库备份。具体步骤见 [知识指南](KNOWLEDGE-GUIDE.md#升级与回退)。
+保留插件标识 `learning-os-trial` 和现有 Markdown 格式。页面资源地址更新为 `ui://learning-os/manager-u2-v4-interaction-3.html`，快照协议保持 `u2-v4`。alpha.47 等早期 writer 不理解多来源方案；回退需先用新版取消未完成的新格式方案，停止服务并保留整库备份。具体步骤见[知识指南](KNOWLEDGE-GUIDE.md#升级与回退)。

@@ -18,7 +18,7 @@ const name = `knowledge-butler-${pkg.version}-windows`;
 const bundle = join(staging, name);
 await mkdir(bundle);
 // Explicit distributable files: never copy local Vaults, connection files or caches.
-for (const path of ["package.json", "package-lock.json", "plugin.json", "dist", "skills", "third-party", "LICENSE", "THIRD-PARTY.md", "README.md", "INSTALL.md", "CHANGELOG.md", "RELEASE-VALIDATION.md", "KNOWLEDGE-GUIDE.md", "compatibility.md"]) {
+for (const path of ["package.json", "package-lock.json", "plugin.json", "dist", "skills", "third-party", "LICENSE", "THIRD-PARTY.md", "README.md", "INSTALL.md", "CHANGELOG.md", "RELEASE-VALIDATION.md", "KNOWLEDGE-GUIDE.md", "docs/GETTING-STARTED.md", "docs/images", "compatibility.md"]) {
   await cp(join(root, path), join(bundle, path), { recursive: true });
 }
 await mkdir(join(bundle, "scripts"));

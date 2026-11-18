@@ -5,6 +5,7 @@ import type { ManagerSnapshot } from "../knowledge-manager-contract";
 import { drawMindmap, type Chart, type Selection, type TopicChart } from "./charts";
 import { StarMap } from "./star-map";
 import { Disclosure } from "./disclosure";
+import { openManagerNote } from "./open-note";
 
 type Topic = NonNullable<ManagerSnapshot["topic"]>;
 export function KnowledgeWorkspace({ topic, theme, app, disabled, offset, onPage, organize }: {
@@ -27,8 +28,8 @@ export function KnowledgeWorkspace({ topic, theme, app, disabled, offset, onPage
   }, [view, model, theme]);
   async function open() {
     try {
-      const result = await app.openLink({ url: topic.openUri });
-      setNotice(result.isError ? "未能请求打开，请复制下方路径在 Obsidian 查找。" : "已请求在 Obsidian 打开。");
+      await openManagerNote(app, topic.path);
+      setNotice("已请求在 Obsidian 打开。");
     } catch { setNotice("宿主无法打开此链接，请复制下方路径在 Obsidian 查找。"); }
   }
   const item = selection?.kind === "item" ? model.items.find(item => item.id === selection.id) : undefined;

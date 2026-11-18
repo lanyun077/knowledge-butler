@@ -1,8 +1,11 @@
 # 知识管家 · Knowledge Butler
 
+[![版本](https://img.shields.io/github/v/release/lanyun077/knowledge-butler?include_prereleases&label=version&color=2563eb)](https://github.com/lanyun077/knowledge-butler/releases)
+[![构建检查](https://github.com/lanyun077/knowledge-butler/actions/workflows/ci.yml/badge.svg)](https://github.com/lanyun077/knowledge-butler/actions/workflows/ci.yml)
+
 在 Codex 中整理资料，在 Obsidian 中积累知识。
 
-**[下载 Windows 安装包](https://github.com/lanyun077/knowledge-butler/releases/download/v0.1.0-rc.1/knowledge-butler-0.1.0-rc.1-windows.zip)** · [所有版本](https://github.com/lanyun077/knowledge-butler/releases) · [简明使用指南](docs/GETTING-STARTED.md)
+**[下载 Windows 安装包](https://github.com/lanyun077/knowledge-butler/releases/download/v0.1.0-rc.2/knowledge-butler-0.1.0-rc.2-windows.zip)** · [所有版本](https://github.com/lanyun077/knowledge-butler/releases) · [简明使用指南](docs/GETTING-STARTED.md)
 
 ## 下载安装
 
@@ -13,7 +16,7 @@
 **2. 准备运行目录**，复制执行：
 
 ```powershell
-$runtime = "$env:LOCALAPPDATA\KnowledgeButler\rc1"
+$runtime = "$env:LOCALAPPDATA\KnowledgeButler\rc2"
 New-Item -ItemType Directory -Force "$env:LOCALAPPDATA\KnowledgeButler" | Out-Null
 node scripts/prepare-codex-trial.mjs "$runtime"
 ```

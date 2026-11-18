@@ -10,7 +10,7 @@
 
 ```powershell
 New-Item -ItemType Directory -Force "$env:LOCALAPPDATA\KnowledgeButler" | Out-Null
-node scripts/prepare-codex-trial.mjs "$env:LOCALAPPDATA\KnowledgeButler\rc1"
+node scripts/prepare-codex-trial.mjs "$env:LOCALAPPDATA\KnowledgeButler\rc2"
 ```
 
 使用一个尚未创建的目录作为运行目录。
@@ -18,7 +18,7 @@ node scripts/prepare-codex-trial.mjs "$env:LOCALAPPDATA\KnowledgeButler\rc1"
 准备完成后，按生成的 `TRIAL.md` 验证并注册插件：
 
 ```powershell
-$runtime = "$env:LOCALAPPDATA\KnowledgeButler\rc1"
+$runtime = "$env:LOCALAPPDATA\KnowledgeButler\rc2"
 node "$runtime\plugins\learning-os-trial\scripts\verify-codex-trial.mjs" "$runtime\plugins\learning-os-trial" "$runtime\demo"
 codex plugin marketplace add "$runtime"
 codex plugin add learning-os-trial@learning-os-trial
@@ -31,7 +31,7 @@ node "$runtime\plugins\learning-os-trial\scripts\verify-codex-plugin.mjs" "$runt
 
 ## 连接已有Vault
 
-按[配置文件接入](#通过配置文件接入)设置知识库位置。运行目录中有 **设置知识库.cmd** 时，也可使用图形窗口：
+双击运行目录的 **设置知识库.cmd** 接入知识库；也可按[配置文件接入](#通过配置文件接入)手动设置。
 
 1. 在合成库验证程序后，关闭当前管家页面与工具连接，双击运行目录的 **设置知识库.cmd**。
 2. 选择“使用已有知识库”，通过“选择文件夹”选择已经在 Obsidian 使用的库。
@@ -53,7 +53,7 @@ node "$runtime\plugins\learning-os-trial\scripts\verify-codex-plugin.mjs" "$runt
 关闭管家页面与工具连接，停止对应服务：
 
 ```powershell
-$runtime = "$env:LOCALAPPDATA\KnowledgeButler\rc1"
+$runtime = "$env:LOCALAPPDATA\KnowledgeButler\rc2"
 node "$runtime\plugins\learning-os-trial\dist\knowledge-launcher.js" stop --config "$runtime\demo\connection.json"
 ```
 
